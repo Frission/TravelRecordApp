@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:customCells="clr-namespace:TravelRecordApp.CustomCells"
+             mc:Ignorable="d"
+             x:Class="TravelRecordApp.HistoryPage">
+    
+    <ListView x:Name="travelPostListView" ItemSelected="travelPostListView_ItemSelected" Header="Travel Experiences" SeparatorColor="White">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <customCells:CustomTextCell Text="{Binding TravelExperience}" TextColor="Black" SelectedBackgroundColor="#8cdb6d"/>
+                <!--<ViewCell>
+                    <StackLayout VerticalOptions="FillAndExpand">
+                        <Label Text="{Binding TravelExperience}" 
+                               TextColor="Black" 
+                               Margin="15,0,0,0" 
+                               FontSize="22" 
+                               MaxLines="1">
+                        </Label>
+                    </StackLayout>
+                </ViewCell>-->
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>
