@@ -10,18 +10,18 @@
              BarTextColor="{StaticResource ColorGhostWhite}">
     
     <TabbedPage.ToolbarItems>
-        <ToolbarItem x:Name="Toolbar_AddButton" Text="Add" Clicked="Toolbar_AddButton_Clicked" />
+        <ToolbarItem x:Name="Toolbar_AddButton" Text="Add" Icon="add.png" Clicked="Toolbar_AddButton_Clicked" />
     </TabbedPage.ToolbarItems>
     
-    <localpage:HistoryPage Title="History">
+    <localpage:HistoryPage Title="History" Icon="home.png">
         
     </localpage:HistoryPage>
-    
-    <localpage:MapPage Title="Map">
+
+    <localpage:MapPage Title="Map" Icon="map.png">
         
     </localpage:MapPage>
-    
-    <localpage:ProfilePage Title="Profile">
+
+    <localpage:ProfilePage Title="Profile" Icon="user.png">
         
     </localpage:ProfilePage>
     

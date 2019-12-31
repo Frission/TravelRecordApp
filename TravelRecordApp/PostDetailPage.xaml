@@ -7,9 +7,24 @@
              x:Class="TravelRecordApp.PostDetailPage">
     <ContentPage.Content>
         <StackLayout Margin="30,0" Padding="0,30,0,0" Spacing="15">
-            <Editor x:Name="ExperienceEntry" 
+            <Label x:Name="LocationLabel" 
+                   Text="Placeholder"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   HorizontalOptions="Center"
+                   TextColor="{d:StaticResource ColorDarkGreen}"/>
+            <Label x:Name="AddressLabel" 
+                   Text="Placeholder"
+                   FontSize="16"
+                   HorizontalOptions="Center"
+                   TextColor="DimGray"/>
+            <Label Text="Experience"
+                   TextColor="Gray"
+                   Margin="20,20,20,0"/>
+            <Editor x:Name="ExperienceEntry"                   
                    Placeholder="Travel Experience"
                    HeightRequest="200"
+                    Margin="20,0,20,30"
                  />
             <StackLayout Spacing="15" Orientation="Horizontal">
             <Button x:Name="UpdateButton" 

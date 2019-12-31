@@ -8,6 +8,7 @@ using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Plugin.Geolocator;
+using Xamarin.Forms.Maps;
 
 namespace TravelRecordApp
 {
@@ -26,7 +27,7 @@ namespace TravelRecordApp
         {
             base.OnAppearing();
 
-            if(_hasLocationPermission)
+            if (_hasLocationPermission)
             {
                 var locator = CrossGeolocator.Current;
 
@@ -35,13 +36,24 @@ namespace TravelRecordApp
             }
 
             GetLocation();
+
+            List<Model.Post> travelTable = new List<Model.Post>();
+
+            using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
+            {
+                // if a table already exists, this call is just ignored
+                connection.CreateTable<Model.Post>();
+                travelTable = connection.Table<Model.Post>().ToList();
+            }
+
+            DisplayInMap(travelTable);
         }
 
-        protected override void OnDisappearing()
+        protected override async void OnDisappearing()
         {
             base.OnDisappearing();
 
-            CrossGeolocator.Current.StopListeningAsync();
+            await CrossGeolocator.Current.StopListeningAsync();
             CrossGeolocator.Current.PositionChanged -= Locator_PositionChanged;
         }
 
@@ -62,9 +74,34 @@ namespace TravelRecordApp
         }
         private void MoveMap(Plugin.Geolocator.Abstractions.Position position)
         {
-            var center = new Xamarin.Forms.Maps.Position(position.Latitude, position.Longitude);
-            var span = new Xamarin.Forms.Maps.MapSpan(center, 1, 1);
+            var center = new Position(position.Latitude, position.Longitude);
+            var span = new MapSpan(center, 1, 1);
             LocationsMap.MoveToRegion(span);
+        }
+
+        private void DisplayInMap(List<Model.Post> posts)
+        {
+            foreach (var post in posts)
+            {
+                try
+                {
+                    var position = new Position(post.Latitude, post.Longitude);
+
+                    var pin = new Pin()
+                    {
+                        Type = PinType.SavedPin,
+                        Position = position,
+                        Label = post.VenueName,
+                        Address = post.Address,                        
+                    };
+
+                    LocationsMap.Pins.Add(pin);
+                }
+                catch(NullReferenceException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
 
         private async void GetPermissions()
@@ -100,7 +137,7 @@ namespace TravelRecordApp
                     LocationsMap.IsShowingUser = false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "OK");
             }

@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="TravelRecordApp.NewTravelPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Clicked="ToolbarSave_Clicked"/>
+        <ToolbarItem Text="Save" Icon="save.png" Clicked="ToolbarSave_Clicked"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -14,6 +14,34 @@
             <Editor x:Name="Entry_Experience" 
                     Placeholder="Write your experience!"
                     HeightRequest="200" />
+            <ListView x:Name="VenueListView"  
+                      Margin="20, 0"
+                      HorizontalOptions="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Label Text="{Binding name}"
+                                       FontAttributes="Bold"/>
+                                <Label Grid.Row="1"
+                                       TextColor="{d:StaticResource ColorDarkGreen}"
+                                       Text="{Binding location.address}"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding location.distance, StringFormat='{0} meters '}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

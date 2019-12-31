@@ -7,6 +7,11 @@
              x:Class="TravelRecordApp.LoginPage">
 
     <StackLayout VerticalOptions="Center" Margin="30,50" Padding="0,30,0,0" Spacing="15">
+        <Image x:Name="LoginPageLogo"
+               Aspect="AspectFit"
+               HeightRequest="175"
+               HorizontalOptions="FillAndExpand"
+               Margin="0, 0, 0, 0"/>
         <Entry x:Name="Input_Email" 
                Placeholder="Email" 
                Keyboard="Email"/>

@@ -6,10 +6,24 @@
              mc:Ignorable="d"
              x:Class="TravelRecordApp.ProfilePage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to the Profile Page!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="20">
+            <Label x:Name="PostCountLabel"
+                   VerticalOptions="Center" 
+                   Text="1"
+                   TextColor="{d:StaticResource ColorDarkGreen}"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   HorizontalOptions="Center" />
+            <Label Text="Posts" 
+                   HorizontalOptions="Center"/>
+            <ListView x:Name="CategoriesListView" SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Path=Key}"
+                                  Detail="{Binding Path=Value}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

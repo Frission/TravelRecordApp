@@ -19,13 +19,13 @@ namespace TravelRecordApp
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            List<Model.TravelPost> travelTable = new List<Model.TravelPost>();
+            List<Model.Post> travelTable = new List<Model.Post>();
 
             using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
             {
                 // if a table already exists, this call is just ignored
-                connection.CreateTable<Model.TravelPost>();
-                travelTable = connection.Table<Model.TravelPost>().ToList();
+                connection.CreateTable<Model.Post>();
+                travelTable = connection.Table<Model.Post>().ToList();
             }
 
             travelPostListView.ItemsSource = travelTable;
@@ -33,7 +33,7 @@ namespace TravelRecordApp
 
         private void travelPostListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            var selectedPost = travelPostListView.SelectedItem as Model.TravelPost;
+            var selectedPost = travelPostListView.SelectedItem as Model.Post;
 
             if(selectedPost != null)
             {

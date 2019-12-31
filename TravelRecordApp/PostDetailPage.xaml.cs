@@ -12,14 +12,16 @@ namespace TravelRecordApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PostDetailPage : ContentPage
     {
-        private Model.TravelPost _selectedPost;
-        public PostDetailPage(Model.TravelPost selectedPost)
+        private Model.Post _selectedPost;
+        public PostDetailPage(Model.Post selectedPost)
         {
             InitializeComponent();
 
             _selectedPost = selectedPost;
 
             ExperienceEntry.Text = _selectedPost.TravelExperience;
+            LocationLabel.Text = _selectedPost.VenueName;
+            AddressLabel.Text = _selectedPost.Address;
         }
 
         private void UpdateButton_Clicked(object sender, EventArgs e)
@@ -28,7 +30,7 @@ namespace TravelRecordApp
 
             using(SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
             {
-                connection.CreateTable<Model.TravelPost>();
+                connection.CreateTable<Model.Post>();
                 int rows = connection.Update(_selectedPost);
 
                 if(rows > 0)
@@ -46,7 +48,7 @@ namespace TravelRecordApp
         {
             using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
             {
-                connection.CreateTable<Model.TravelPost>();
+                connection.CreateTable<Model.Post>();
                 int rows = connection.Delete(_selectedPost);
 
                 if (rows > 0)

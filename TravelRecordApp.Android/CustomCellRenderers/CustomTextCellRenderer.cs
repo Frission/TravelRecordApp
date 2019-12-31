@@ -34,6 +34,8 @@ namespace TravelRecordApp.Droid.CustomCellRenderers
                 if (_isSelected)
                 {
                     var customTextCell = sender as CustomTextCell;
+                    if (customTextCell == null)
+                        return;
                     _cell.SetBackgroundColor(customTextCell.SelectedBackgroundColor.ToAndroid());
                 }
                 else
