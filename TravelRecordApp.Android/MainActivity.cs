@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Plugin.Permissions;
+using Microsoft.WindowsAzure.MobileServices;
 
 namespace TravelRecordApp.Droid
 {
@@ -23,6 +24,7 @@ namespace TravelRecordApp.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.FormsMaps.Init(this, savedInstanceState);
+            CurrentPlatform.Init();
 
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
 

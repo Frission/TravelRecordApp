@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Plugin.Geolocator;
 using Xamarin.Forms.Maps;
+using TravelRecordApp.Model;
 
 namespace TravelRecordApp
 {
@@ -16,6 +17,11 @@ namespace TravelRecordApp
     public partial class MapPage : ContentPage
     {
         private bool _hasLocationPermission = false;
+        /// <summary>
+        /// Is it the first time the user is opening this section in this session?
+        /// </summary>
+        private bool _firstTime = true;
+
         public MapPage()
         {
             InitializeComponent();
@@ -37,14 +43,16 @@ namespace TravelRecordApp
 
             GetLocation();
 
-            List<Model.Post> travelTable = new List<Model.Post>();
+            List<Post> travelTable = new List<Post>();
 
-            using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
-            {
-                // if a table already exists, this call is just ignored
-                connection.CreateTable<Model.Post>();
-                travelTable = connection.Table<Model.Post>().ToList();
-            }
+            //using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
+            //{
+            //    // if a table already exists, this call is just ignored
+            //    connection.CreateTable<Model.Post>();
+            //    travelTable = connection.Table<Model.Post>().ToList();
+            //}
+
+            travelTable = await Post.GetUserPosts();
 
             DisplayInMap(travelTable);
         }
@@ -69,17 +77,21 @@ namespace TravelRecordApp
                 var locator = CrossGeolocator.Current;
                 var position = await locator.GetPositionAsync();
 
-                MoveMap(position);
+                if (_firstTime)
+                {
+                    MoveMap(position);
+                    _firstTime = false;
+                }
             }
         }
         private void MoveMap(Plugin.Geolocator.Abstractions.Position position)
         {
             var center = new Position(position.Latitude, position.Longitude);
-            var span = new MapSpan(center, 1, 1);
+            var span = new MapSpan(center, 0.2, 0.2);
             LocationsMap.MoveToRegion(span);
         }
 
-        private void DisplayInMap(List<Model.Post> posts)
+        private void DisplayInMap(List<Post> posts)
         {
             foreach (var post in posts)
             {

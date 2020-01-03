@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TravelRecordApp.Model;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,19 +17,32 @@ namespace TravelRecordApp
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            List<Model.Post> travelTable = new List<Model.Post>();
+            List<Post> travelTable = new List<Post>();
 
-            using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
-            {
-                // if a table already exists, this call is just ignored
-                connection.CreateTable<Model.Post>();
-                travelTable = connection.Table<Model.Post>().ToList();
-            }
+            //using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
+            //{
+            //    // if a table already exists, this call is just ignored
+            //    connection.CreateTable<Model.Post>();
+            //    travelTable = connection.Table<Model.Post>().ToList();
+            //}
+
+           travelTable = await Post.GetUserPosts();
 
             travelPostListView.ItemsSource = travelTable;
+
+            if (travelTable.Count > 0)
+            {
+                travelPostListView.IsVisible = true;
+                NoPostsLabel.IsVisible = false;
+            }
+            else
+            {
+                travelPostListView.IsVisible = false;
+                NoPostsLabel.IsVisible = true;
+            }
         }
 
         private void travelPostListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

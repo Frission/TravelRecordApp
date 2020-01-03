@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TravelRecordApp.Managers;
+using TravelRecordApp.Model;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -25,28 +25,19 @@ namespace TravelRecordApp
             var locator = CrossGeolocator.Current;
             var position = await locator.GetPositionAsync();
 
-            var venues = await VenueManager.GetVenues(position.Latitude, position.Longitude);
-
-            venues.Sort(delegate (Model.Venue venue1, Model.Venue venue2)
-            {
-                if (venue1.location.distance > venue2.location.distance)
-                    return 1;
-                else if (venue1.location.distance == venue2.location.distance)
-                    return 0;
-                else
-                    return -1;
-            });
+            var venues = await Venue.GetVenuesSorted(position.Latitude, position.Longitude);
+            
             VenueListView.ItemsSource = venues;
         }
 
-        private void ToolbarSave_Clicked(object sender, EventArgs e)
+        private async void ToolbarSave_Clicked(object sender, EventArgs e)
         {
             try
             {
-                var selectedVenue = VenueListView.SelectedItem as Model.Venue;
+                var selectedVenue = VenueListView.SelectedItem as Venue;
                 var firstCategory = selectedVenue.categories.FirstOrDefault();
 
-                Model.Post newPost = new Model.Post()
+                Post newPost = new Post()
                 {
                     TravelExperience = Entry_Experience.Text,
                     VenueName = selectedVenue.name,
@@ -55,33 +46,37 @@ namespace TravelRecordApp
                     Address = selectedVenue.location.address,
                     Latitude = selectedVenue.location.lat,
                     Longitude = selectedVenue.location.lng,
-                    Distance = selectedVenue.location.distance
+                    Distance = selectedVenue.location.distance,
+                    UserId = App.User.Id
                 };
 
-                int addedRows = 0;
-                using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
-                {
-                    // if a table already exists, this call is just ignored
-                    connection.CreateTable<Model.Post>();
-                    addedRows = connection.Insert(newPost);
-                }
+                //int addedRows = 0;
+                //using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
+                //{
+                //    // if a table already exists, this call is just ignored
+                //    connection.CreateTable<Model.Post>();
+                //    addedRows = connection.Insert(newPost);
+                //}
 
-                if (addedRows > 0)
-                {
-                    DisplayAlert("Success", "Experience successfully added!", "OK");
-                }
-                else
-                {
-                    DisplayAlert("Failure", "Experience could not be added :(", "OK");
-                }
+                //if (addedRows > 0)
+                //{
+                //    DisplayAlert("Success", "Experience successfully added!", "OK");
+                //}
+                //else
+                //{
+                //    DisplayAlert("Failure", "Experience could not be added :(", "OK");
+                //}
+
+                await Post.Insert(newPost);
+                await DisplayAlert("Success", "Experience successfully added!", "OK");
             }
-            catch(NullReferenceException nullEx)
+            catch(NullReferenceException)
             {
-                DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
+                await DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
             }
             catch(Exception ex)
             {
-                DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
+                await DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
             }
         }
     }

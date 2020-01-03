@@ -13,7 +13,8 @@
         <StackLayout  Margin="30,0" Padding="0,30,0,0" Spacing="15">
             <Editor x:Name="Entry_Experience" 
                     Placeholder="Write your experience!"
-                    HeightRequest="200" />
+                    HeightRequest="200" 
+                    MaxLength="499"/>
             <ListView x:Name="VenueListView"  
                       Margin="20, 0"
                       HorizontalOptions="FillAndExpand">

@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TravelRecordApp.Helpers;
+using TravelRecordApp.Model;
 using Xamarin.Forms;
 
 namespace TravelRecordApp
@@ -22,16 +24,30 @@ namespace TravelRecordApp
             LoginPageLogo.Source = ImageSource.FromResource("TravelRecordApp.Assets.Images.plane.png", assembly);
         }
 
-        private void Button_Login_Clicked(object sender, EventArgs e)
+        private async void LoginButton_Clicked(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(Input_Email.Text) || string.IsNullOrEmpty(Input_Password.Text))
-            {
+            LoginButton.Text = "LOGGING IN...";
+            LoginButton.IsEnabled = false;
 
-            }
-            else
+            CloudOperationResult opResult = await Users.Login(EmailEntry.Text, PasswordEntry.Text);
+
+            if(opResult.Success == false)
             {
-                Navigation.PushAsync(new HomePage());              
+                await DisplayAlert("Error", ApplicationErrors.GetError(opResult.Error).Message, "OK");
+                LoginButton.Text = "LOG IN";
+                LoginButton.IsEnabled = true;
+                return;
             }
+
+            LoginButton.Text = "LOG IN";
+            LoginButton.IsEnabled = true;
+            Navigation.InsertPageBefore(new HomePage(), this);
+            await Navigation.PopAsync();
+        }
+
+        private void RegisterButton_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new RegisterPage());
         }
     }
 }

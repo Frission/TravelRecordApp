@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using TravelRecordApp.Helpers;
 
 namespace TravelRecordApp.Model
@@ -64,6 +67,42 @@ namespace TravelRecordApp.Model
         //public string referralId { get; set; }
         //public bool hasPerk { get; set; }
         public VenuePage venuePage { get; set; }
+
+        public async static Task<List<Venue>> GetVenues(double latitude, double longitude)
+        {
+            List<Venue> venues = new List<Venue>();
+
+            string url = VenueInfos.GenerateURL(latitude, longitude);
+
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.GetAsync(url);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var venueInfo = JsonConvert.DeserializeObject<VenueInfos>(json);
+
+                venues = venueInfo.response.venues as List<Venue>;
+            }
+
+            return venues;
+        }
+
+        public async static Task<List<Venue>> GetVenuesSorted(double latitude, double longitude)
+        {
+            var venues = await GetVenues(latitude, longitude);
+
+            venues.Sort(delegate (Venue venue1, Venue venue2)
+            {
+                if (venue1.location.distance > venue2.location.distance)
+                    return 1;
+                else if (venue1.location.distance == venue2.location.distance)
+                    return 0;
+                else
+                    return -1;
+            });
+
+            return venues;
+        }
     }
 
     public class Response

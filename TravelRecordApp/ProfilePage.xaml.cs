@@ -18,31 +18,21 @@ namespace TravelRecordApp
             InitializeComponent();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
 
-            using(SQLiteConnection connection = new SQLiteConnection(App.DatabaseLocation))
-            {
-                var postTable = connection.Table<Post>().ToList();
+            //using(SQLiteConnection connection = new SQLiteConnection(App.DatabaseLocation))
+            //{
+            //var postTable = connection.Table<Post>().ToList();
+            var posts = await Post.GetUserPosts();
 
-                var categories = (from post in postTable
-                                  orderby post.CategoryId
-                                  select post.CategoryName).Distinct().ToList();
+            Dictionary<string, int> categoriesCount = Post.GetCategories(posts);
 
-                Dictionary<string, int> categoriesCount = new Dictionary<string, int>();
+            CategoriesListView.ItemsSource = categoriesCount;
 
-                categories.ForEach(category =>
-                {
-                    var count = (from post in postTable where post.CategoryName == category select post).Count();
-
-                    categoriesCount.Add(category, count);
-                });
-
-                CategoriesListView.ItemsSource = categoriesCount;
-
-                PostCountLabel.Text = postTable.Count.ToString();
-            }
+            PostCountLabel.Text = posts.Count.ToString();
+            //}
         }
     }
 }

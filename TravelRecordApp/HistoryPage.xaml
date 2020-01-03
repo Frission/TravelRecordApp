@@ -6,12 +6,24 @@
              xmlns:customCells="clr-namespace:TravelRecordApp.CustomCells"
              mc:Ignorable="d"
              x:Class="TravelRecordApp.HistoryPage">
-    
-    <ListView x:Name="travelPostListView" ItemSelected="travelPostListView_ItemSelected" Header="Travel Experiences" SeparatorColor="White">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <customCells:CustomTextCell Text="{Binding TravelExperience}" TextColor="Black" SelectedBackgroundColor="#8cdb6d"/>
-                <!--<ViewCell>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label x:Name="NoPostsLabel"
+                Text="No posts found. Maybe it's time to travel?"
+                TextColor="DimGray"
+                HorizontalOptions="Center"
+                Margin="0,20,0,0"
+                IsVisible="False"/>  
+            <ListView x:Name="travelPostListView" 
+                      ItemSelected="travelPostListView_ItemSelected"
+                      Header="Travel Experiences" 
+                      IsVisible="False"
+                      Margin="20,10,20,10">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <customCells:CustomTextCell Text="{Binding TravelExperience}" TextColor="Black" SelectedBackgroundColor="#8cdb6d"/>
+                        <!--<ViewCell>
                     <StackLayout VerticalOptions="FillAndExpand">
                         <Label Text="{Binding TravelExperience}" 
                                TextColor="Black" 
@@ -21,7 +33,10 @@
                         </Label>
                     </StackLayout>
                 </ViewCell>-->
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+
 </ContentPage>

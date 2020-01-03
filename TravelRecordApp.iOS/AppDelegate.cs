@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using Microsoft.WindowsAzure.MobileServices;
 using UIKit;
 
 namespace TravelRecordApp.iOS
@@ -24,6 +25,7 @@ namespace TravelRecordApp.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.FormsMaps.Init();
+            CurrentPlatform.Init();
 
             // fetch the databsae location
             string databaseName = "travel_db.sqlite";

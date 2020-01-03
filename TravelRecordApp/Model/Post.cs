@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TravelRecordApp.Model
 {
     public class Post
     {
         [SQLite.PrimaryKey, SQLite.AutoIncrement, SQLite.Unique]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [SQLite.MaxLength(500)]
         public string TravelExperience { get; set; }
@@ -25,5 +26,46 @@ namespace TravelRecordApp.Model
         public double Longitude { get; set; }
 
         public int Distance { get; set; }
+
+        public string UserId { get; set; }
+
+        public static async Task Insert(Post post)
+        {
+            await App.MobileClient.GetTable<Post>().InsertAsync(post);
+        }
+
+        public static async Task<List<Post>> GetUserPosts()
+        {
+            var posts = await App.MobileClient.GetTable<Post>().Where(p => p.UserId == App.User.Id).ToListAsync();
+            return posts;
+        }
+
+        public static async Task UpdatePost(Post post)
+        {
+            await App.MobileClient.GetTable<Post>().UpdateAsync(post);
+        }
+
+        public static async Task DeletePost(Post post)
+        {
+            await App.MobileClient.GetTable<Post>().DeleteAsync(post);
+        }
+
+        public static Dictionary<string, int> GetCategories(List<Post> posts)
+        {
+            var categories = (from post in posts
+                              orderby post.CategoryId
+                              select post.CategoryName).Distinct().ToList();
+
+            Dictionary<string, int> categoriesCount = new Dictionary<string, int>();
+
+            categories.ForEach(category =>
+            {
+                var count = (from post in postTable where post.CategoryName == category select post).Count();
+
+                categoriesCount.Add(category, count);
+            });
+
+            return categoriesCount;
+        }
     }
 }
