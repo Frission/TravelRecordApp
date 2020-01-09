@@ -10,9 +10,10 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout  Margin="30,0" Padding="0,30,0,0" Spacing="15">
+        <StackLayout x:Name="ContainerStackLayout" Margin="30,0" Padding="0,30,0,0" Spacing="15">
             <Editor x:Name="Entry_Experience" 
                     Placeholder="Write your experience!"
+                    Text="{Binding TravelExperience, Mode=TwoWay}"
                     HeightRequest="200" 
                     MaxLength="499"/>
             <ListView x:Name="VenueListView"  

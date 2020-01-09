@@ -13,9 +13,13 @@ namespace TravelRecordApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewTravelPage : ContentPage
     {
+        Post post;
         public NewTravelPage()
         {
             InitializeComponent();
+
+            post = new Post();
+            ContainerStackLayout.BindingContext = post;
         }
 
         protected override async void OnAppearing()
@@ -26,7 +30,7 @@ namespace TravelRecordApp
             var position = await locator.GetPositionAsync();
 
             var venues = await Venue.GetVenuesSorted(position.Latitude, position.Longitude);
-            
+
             VenueListView.ItemsSource = venues;
         }
 
@@ -34,47 +38,16 @@ namespace TravelRecordApp
         {
             try
             {
-                var selectedVenue = VenueListView.SelectedItem as Venue;
-                var firstCategory = selectedVenue.categories.FirstOrDefault();
+                post = Post.CreatePost(post.TravelExperience, VenueListView.SelectedItem as Venue);
 
-                Post newPost = new Post()
-                {
-                    TravelExperience = Entry_Experience.Text,
-                    VenueName = selectedVenue.name,
-                    CategoryId = firstCategory.id,
-                    CategoryName = firstCategory.name,
-                    Address = selectedVenue.location.address,
-                    Latitude = selectedVenue.location.lat,
-                    Longitude = selectedVenue.location.lng,
-                    Distance = selectedVenue.location.distance,
-                    UserId = App.User.Id
-                };
-
-                //int addedRows = 0;
-                //using (SQLite.SQLiteConnection connection = new SQLite.SQLiteConnection(App.DatabaseLocation))
-                //{
-                //    // if a table already exists, this call is just ignored
-                //    connection.CreateTable<Model.Post>();
-                //    addedRows = connection.Insert(newPost);
-                //}
-
-                //if (addedRows > 0)
-                //{
-                //    DisplayAlert("Success", "Experience successfully added!", "OK");
-                //}
-                //else
-                //{
-                //    DisplayAlert("Failure", "Experience could not be added :(", "OK");
-                //}
-
-                await Post.Insert(newPost);
+                await Post.Insert(post);
                 await DisplayAlert("Success", "Experience successfully added!", "OK");
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 await DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("Failure", "Experience could not be added due to an error :(", "OK");
             }
